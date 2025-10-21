@@ -1,26 +1,22 @@
 import customtkinter as ctk
 
 # Configuração inicial da janela
-ctk.set_appearance_mode("light")  # "dark" ou "light"
+ctk.set_appearance_mode("dark")  # "dark" ou "light"
 ctk.set_default_color_theme("green")
 
 app = ctk.CTk()
 app.title("EcoScore – Monitoramento de Hábitos Sustentáveis")
 app.geometry("600x400")
 
-# -----------------------------
 # Variáveis globais
-# -----------------------------
 usuarios = {}
 usuario_logado = None
 
-# -----------------------------
 # Funções de navegação
-# -----------------------------
 def mostrar_frame(frame):
     """Esconde todos os frames e mostra o escolhido"""
     for f in (frame_menu, frame_login, frame_cadastro, frame_quiz, frame_resultado):
-        f.pack_forget()
+        f.pack_forget() ## Faz o frame sumir da tela
     frame.pack(fill="both", expand=True)
 
 # -----------------------------
@@ -140,11 +136,11 @@ var3 = ctk.IntVar()
 var4 = ctk.IntVar()
 var5 = ctk.IntVar()
 
-ctk.CTkCheckBox(frame_quiz, text="Usou transporte sustentável hoje?", variable=var1, onvalue=10, offvalue=0).pack(anchor="w", padx=80)
-ctk.CTkCheckBox(frame_quiz, text="Evitou uso de descartáveis?", variable=var2, onvalue=10, offvalue=0).pack(anchor="w", padx=80)
-ctk.CTkCheckBox(frame_quiz, text="Separou o lixo reciclável?", variable=var3, onvalue=10, offvalue=0).pack(anchor="w", padx=80)
-ctk.CTkCheckBox(frame_quiz, text="Economizou energia elétrica?", variable=var4, onvalue=10, offvalue=0).pack(anchor="w", padx=80)
-ctk.CTkCheckBox(frame_quiz, text="Reaproveitou materiais?", variable=var5, onvalue=10, offvalue=0).pack(anchor="w", padx=80)
+ctk.CTkCheckBox(frame_quiz, text="Usou transporte sustentável hoje?", variable=var1, onvalue=10, offvalue=0).pack(anchor="w", padx=80, pady=10)
+ctk.CTkCheckBox(frame_quiz, text="Evitou uso de descartáveis?", variable=var2, onvalue=10, offvalue=0).pack(anchor="w", padx=80, pady=10)
+ctk.CTkCheckBox(frame_quiz, text="Separou o lixo reciclável?", variable=var3, onvalue=10, offvalue=0).pack(anchor="w", padx=80, pady=10)
+ctk.CTkCheckBox(frame_quiz, text="Economizou energia elétrica?", variable=var4, onvalue=10, offvalue=0).pack(anchor="w", padx=80, pady=10)
+ctk.CTkCheckBox(frame_quiz, text="Reaproveitou materiais?", variable=var5, onvalue=10, offvalue=0).pack(anchor="w", padx=80, pady=10)
 
 btn_enviar = ctk.CTkButton(frame_quiz, text="Enviar respostas", command=calcular_pontuacao)
 btn_enviar.pack(pady=20)
