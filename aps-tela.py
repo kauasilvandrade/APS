@@ -2,6 +2,11 @@ import customtkinter as ctk
 import pandas as pd
 import os
 
+
+# Variáveis globais
+usuarios = {}
+usuario_logado = None
+
 # Carrega os usuários já cadastrados do arquivo Excel, se existir
 arquivo_excel = "usuarios.xlsx"
 
@@ -23,9 +28,6 @@ app = ctk.CTk()
 app.title("EcoScore – Monitoramento de Hábitos Sustentáveis")
 app.geometry("600x400")
 
-# Variáveis globais
-usuarios = {}
-usuario_logado = None
 
 # Funções de navegação
 def mostrar_frame(frame):
