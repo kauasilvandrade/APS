@@ -1,4 +1,6 @@
 import customtkinter as ctk
+import pandas as pd
+import os
 
 # Configuração inicial da janela
 ctk.set_appearance_mode("dark")  # "dark" ou "light"
@@ -23,6 +25,37 @@ def mostrar_frame(frame):
 # Funções do sistema
 # -----------------------------
 def cadastrar_usuario():
+    nome = entry_nome.get()
+    email = entry_email.get()
+    senha = entry_senha.get()
+
+    if email in usuarios:
+        label_status_cadastro.configure(text="❌ Este e-mail já está cadastrado.", text_color="red")
+    else:
+        usuarios[email] = {"nome": nome, "senha": senha, "pontuacao": 0}
+
+        # --- Salvar no Excel ---
+        novo_usuario = pd.DataFrame({
+            "Nome": [nome],
+            "E-mail": [email],
+            "Senha": [senha],
+            "Pontuação": [0]
+        })
+
+        arquivo_excel = "usuarios.xlsx"
+
+        # Se o arquivo já existir, adiciona o novo usuário sem apagar os anteriores
+        if os.path.exists(arquivo_excel):
+            antigos = pd.read_excel(arquivo_excel)
+            atualizados = pd.concat([antigos, novo_usuario], ignore_index=True)
+            atualizados.to_excel(arquivo_excel, index=False)
+        else:
+            # Cria o arquivo se for o primeiro cadastro
+            novo_usuario.to_excel(arquivo_excel, index=False)
+
+        # Mensagem de sucesso
+        label_status_cadastro.configure(text=f"✅ {nome} cadastrado com sucesso!", text_color="green")
+
     nome = entry_nome.get()
     email = entry_email.get()
     senha = entry_senha.get()
@@ -157,4 +190,5 @@ btn_voltar_menu.pack()
 
 # Iniciar na tela de menu
 mostrar_frame(frame_menu)
+
 app.mainloop()
