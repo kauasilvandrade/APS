@@ -39,6 +39,7 @@ def mostrar_frame(frame):
 # -----------------------------
 # Funções do sistema
 # -----------------------------
+
 def cadastrar_usuario():
     nome = entry_nome.get()
     email = entry_email.get()
@@ -59,27 +60,15 @@ def cadastrar_usuario():
 
         arquivo_excel = "usuarios.xlsx"
 
-        # Se o arquivo já existir, adiciona o novo usuário sem apagar os anteriores
         if os.path.exists(arquivo_excel):
             antigos = pd.read_excel(arquivo_excel)
             atualizados = pd.concat([antigos, novo_usuario], ignore_index=True)
             atualizados.to_excel(arquivo_excel, index=False)
         else:
-            # Cria o arquivo se for o primeiro cadastro
             novo_usuario.to_excel(arquivo_excel, index=False)
 
-        # Mensagem de sucesso
         label_status_cadastro.configure(text=f"✅ {nome} cadastrado com sucesso!", text_color="green")
 
-    nome = entry_nome.get()
-    email = entry_email.get()
-    senha = entry_senha.get()
-
-    if email in usuarios:
-        label_status_cadastro.configure(text="❌ Este e-mail já está cadastrado.", text_color="red")
-    else:
-        usuarios[email] = {"nome": nome, "senha": senha, "pontuacao": 0}
-        label_status_cadastro.configure(text=f"✅ {nome} cadastrado com sucesso!", text_color="green")
 
 def login_usuario():
     global usuario_logado
