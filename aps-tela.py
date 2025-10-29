@@ -2,6 +2,19 @@ import customtkinter as ctk
 import pandas as pd
 import os
 
+# Carrega os usuários já cadastrados do arquivo Excel, se existir
+arquivo_excel = "usuarios.xlsx"
+
+if os.path.exists(arquivo_excel):
+    dados_excel = pd.read_excel(arquivo_excel)
+    for _, linha in dados_excel.iterrows():
+        usuarios[linha["E-mail"]] = {
+            "nome": linha["Nome"],
+            "senha": str(linha["Senha"]),
+            "pontuacao": int(linha["Pontuação"])
+        }
+
+
 # Configuração inicial da janela
 ctk.set_appearance_mode("dark")  # "dark" ou "light"
 ctk.set_default_color_theme("green")
