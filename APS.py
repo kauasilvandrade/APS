@@ -8,7 +8,7 @@ ctk.set_default_color_theme("dark-blue")
 
 app = ctk.CTk()
 app.title("EcoScore – Monitoramento de Hábitos Sustentáveis")
-app.geometry("500x600")
+app.geometry("1000x500")
 app.resizable(False, False)
 
 # --- Variáveis globais ---
@@ -40,7 +40,7 @@ carregar_usuarios()
 def mostrar_frame(frame):
     for f in (frame_menu, frame_cadastro, frame_login, frame_quiz, frame_resultado):
         f.pack_forget()
-    frame.pack(pady=20)
+    frame.pack(fill="both", expand=True)
 
 def cadastrar_usuario():
     nome = entry_nome.get().strip()
@@ -105,28 +105,28 @@ frame_menu = ctk.CTkFrame(app)
 frame_menu.pack(pady=20)
 
 label_titulo_menu = ctk.CTkLabel(frame_menu, text="🌿 EcoScore 🌿", font=ctk.CTkFont(size=26, weight="bold"))
-label_titulo_menu.pack(pady=(0,30))
+label_titulo_menu.pack(pady=(120,30))
 
-btn_login_menu = ctk.CTkButton(frame_menu, text="Login", width=250, command=lambda: mostrar_frame(frame_login))
+btn_login_menu = ctk.CTkButton(frame_menu, text="Login", width=280, height=40, command=lambda: mostrar_frame(frame_login))
 btn_login_menu.pack(pady=10)
 
-btn_cadastro_menu = ctk.CTkButton(frame_menu, text="Cadastro", width=250, command=lambda: mostrar_frame(frame_cadastro))
+btn_cadastro_menu = ctk.CTkButton(frame_menu, text="Cadastro", width=280, height=40, command=lambda: mostrar_frame(frame_cadastro))
 btn_cadastro_menu.pack(pady=10)
 
-btn_sair_menu = ctk.CTkButton(frame_menu, text="Sair", width=250, fg_color="#9CA3AF", hover_color="#6B7280", command=app.destroy)
+btn_sair_menu = ctk.CTkButton(frame_menu, text="Sair", width=280, height=40, fg_color="#9CA3AF", hover_color="#6B7280", command=app.destroy)
 btn_sair_menu.pack(pady=10)
 
 # --- Cadastro ---
 frame_cadastro = ctk.CTkFrame(app, width=400, height=500, corner_radius=15)
 label_titulo_cad = ctk.CTkLabel(frame_cadastro, text="Cadastrar Usuário", font=ctk.CTkFont(size=22, weight="bold"))
-label_titulo_cad.pack(pady=(10,20))
+label_titulo_cad.pack(pady=(120,20))
 
-entry_nome = ctk.CTkEntry(frame_cadastro, placeholder_text="Nome completo", width=300)
-entry_nome.pack(pady=5)
-entry_email = ctk.CTkEntry(frame_cadastro, placeholder_text="E-mail", width=300)
-entry_email.pack(pady=5)
-entry_senha = ctk.CTkEntry(frame_cadastro, placeholder_text="Senha", show="*", width=300)
-entry_senha.pack(pady=5)
+entry_nome = ctk.CTkEntry(frame_cadastro, placeholder_text="Nome completo", width=300, height=35)
+entry_nome.pack(pady=7)
+entry_email = ctk.CTkEntry(frame_cadastro, placeholder_text="E-mail", width=300, height=35)
+entry_email.pack(pady=7)
+entry_senha = ctk.CTkEntry(frame_cadastro, placeholder_text="Senha", show="*", width=300, height=35)
+entry_senha.pack(pady=7)
 
 botao_cadastrar = ctk.CTkButton(frame_cadastro, text="Cadastrar", width=300, height=40, fg_color="#3B82F6", hover_color="#2563EB", command=cadastrar_usuario)
 botao_cadastrar.pack(pady=10)
@@ -140,12 +140,12 @@ botao_ir_login.pack(pady=5)
 # --- Login ---
 frame_login = ctk.CTkFrame(app, width=400, height=500, corner_radius=15)
 label_titulo_login = ctk.CTkLabel(frame_login, text="Fazer Login", font=ctk.CTkFont(size=22, weight="bold"))
-label_titulo_login.pack(pady=(10,20))
+label_titulo_login.pack(pady=(120,20))
 
-entry_email_login = ctk.CTkEntry(frame_login, placeholder_text="E-mail", width=300)
-entry_email_login.pack(pady=5)
-entry_senha_login = ctk.CTkEntry(frame_login, placeholder_text="Senha", show="*", width=300)
-entry_senha_login.pack(pady=5)
+entry_email_login = ctk.CTkEntry(frame_login, placeholder_text="E-mail", width=300, height=35)
+entry_email_login.pack(pady=7)
+entry_senha_login = ctk.CTkEntry(frame_login, placeholder_text="Senha", show="*", width=300, height=35)
+entry_senha_login.pack(pady=7)
 
 botao_login = ctk.CTkButton(frame_login, text="Entrar", width=300, height=40, fg_color="#22C55E", hover_color="#16A34A", command=fazer_login)
 botao_login.pack(pady=10)
@@ -158,8 +158,8 @@ botao_ir_cad.pack(pady=5)
 
 # --- Questionário ---
 frame_quiz = ctk.CTkFrame(app)
-label_quiz = ctk.CTkLabel(frame_quiz, text="Questionário Sustentável", font=ctk.CTkFont(size=20, weight="bold"))
-label_quiz.pack(pady=20)
+label_quiz = ctk.CTkLabel(frame_quiz, text="Questionário Sustentável", font=ctk.CTkFont(size=26, weight="bold"))
+label_quiz.pack(pady=(120,30))
 
 var1 = ctk.IntVar()
 var2 = ctk.IntVar()
@@ -167,11 +167,11 @@ var3 = ctk.IntVar()
 var4 = ctk.IntVar()
 var5 = ctk.IntVar()
 
-ctk.CTkCheckBox(frame_quiz, text="Usou transporte sustentável hoje?", variable=var1, onvalue=10, offvalue=0).pack(anchor="w", padx=50, pady=5)
-ctk.CTkCheckBox(frame_quiz, text="Evitou uso de descartáveis?", variable=var2, onvalue=10, offvalue=0).pack(anchor="w", padx=50, pady=5)
-ctk.CTkCheckBox(frame_quiz, text="Separou o lixo reciclável?", variable=var3, onvalue=10, offvalue=0).pack(anchor="w", padx=50, pady=5)
-ctk.CTkCheckBox(frame_quiz, text="Economizou energia elétrica?", variable=var4, onvalue=10, offvalue=0).pack(anchor="w", padx=50, pady=5)
-ctk.CTkCheckBox(frame_quiz, text="Reaproveitou materiais?", variable=var5, onvalue=10, offvalue=0).pack(anchor="w", padx=50, pady=5)
+ctk.CTkCheckBox(frame_quiz, text="Usou transporte sustentável hoje?", variable=var1, onvalue=10, offvalue=0).pack(anchor="w", padx=50, pady=7)
+ctk.CTkCheckBox(frame_quiz, text="Evitou uso de descartáveis?", variable=var2, onvalue=10, offvalue=0).pack(anchor="w", padx=50, pady=7)
+ctk.CTkCheckBox(frame_quiz, text="Separou o lixo reciclável?", variable=var3, onvalue=10, offvalue=0).pack(anchor="w", padx=50, pady=7)
+ctk.CTkCheckBox(frame_quiz, text="Economizou energia elétrica?", variable=var4, onvalue=10, offvalue=0).pack(anchor="w", padx=50, pady=7)
+ctk.CTkCheckBox(frame_quiz, text="Reaproveitou materiais?", variable=var5, onvalue=10, offvalue=0).pack(anchor="w", padx=50, pady=7)
 
 botao_enviar = ctk.CTkButton(frame_quiz, text="Enviar respostas", width=250, height=40, command=calcular_pontuacao)
 botao_enviar.pack(pady=20)
