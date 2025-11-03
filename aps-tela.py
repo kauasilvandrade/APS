@@ -2,14 +2,14 @@ import customtkinter as ctk
 import pandas as pd
 import os
 
-
 # Variáveis globais
 usuarios = {}
 usuario_logado = None
 
-# Carrega os usuários já cadastrados do arquivo Excel, se existir
+# Caminho do arquivo Excel
 arquivo_excel = "usuarios.xlsx"
 
+# Carrega usuários existentes, se o arquivo já existir
 if os.path.exists(arquivo_excel):
     dados_excel = pd.read_excel(arquivo_excel)
     for _, linha in dados_excel.iterrows():
@@ -19,61 +19,48 @@ if os.path.exists(arquivo_excel):
             "pontuacao": int(linha["Pontuação"])
         }
 
-
-# Configuração inicial da janela
-ctk.set_appearance_mode("dark")  # "dark" ou "light"
+# -----------------------------
+# Configuração da janela
+# -----------------------------
+ctk.set_appearance_mode("dark")
 ctk.set_default_color_theme("green")
 
 app = ctk.CTk()
 app.title("EcoScore – Monitoramento de Hábitos Sustentáveis")
 app.geometry("600x400")
 
-
+# -----------------------------
 # Funções de navegação
+# -----------------------------
 def mostrar_frame(frame):
     """Esconde todos os frames e mostra o escolhido"""
     for f in (frame_menu, frame_login, frame_cadastro, frame_quiz, frame_resultado):
-        f.pack_forget() ## Faz o frame sumir da tela
+        f.pack_forget()
     frame.pack(fill="both", expand=True)
 
 # -----------------------------
 # Funções do sistema
 # -----------------------------
-
 def cadastrar_usuario():
-    nome = entry_nome.get()
-    email = entry_email.get()
-    senha = entry_senha.get()
+    nome = entry_nome.get().strip()
+    email = entry_email.get().strip()
+    senha = entry_senha.get().strip()
 
     if email in usuarios:
         label_status_cadastro.configure(text="❌ Este e-mail já está cadastrado.", text_color="red")
-    else:
-        usuarios[email] = {"nome": nome, "senha": senha, "pontuacao": 0}
+        return
 
-        # --- Salvar no Excel ---
-        novo_usuario = pd.DataFrame({
-            "Nome": [nome],
-            "E-mail": [email],
-            "Senha": [senha],
-            "Pontuação": [0]
-        })
+    if not nome or not email or not senha:
+        label_status_cadastro.configure(text="⚠️ Preencha todos os campos.", text_color="yellow")
+        return
 
-        arquivo_excel = "usuarios.xlsx"
-
-        if os.path.exists(arquivo_excel):
-            antigos = pd.read_excel(arquivo_excel)
-            atualizados = pd.concat([antigos, novo_usuario], ignore_index=True)
-            atualizados.to_excel(arquivo_excel, index=False)
-        else:
-            novo_usuario.to_excel(arquivo_excel, index=False)
-
-        label_status_cadastro.configure(text=f"✅ {nome} cadastrado com sucesso!", text_color="green")
-
+    usuarios[email] = {"nome": nome, "senha": senha, "pontuacao": 0}
+    label_status_cadastro.configure(text=f"✅ {nome} cadastrado com sucesso!", text_color="green")
 
 def login_usuario():
     global usuario_logado
-    email = entry_login_email.get()
-    senha = entry_login_senha.get()
+    email = entry_login_email.get().strip()
+    senha = entry_login_senha.get().strip()
 
     if email in usuarios and usuarios[email]["senha"] == senha:
         usuario_logado = email
@@ -84,10 +71,29 @@ def login_usuario():
 
 def calcular_pontuacao():
     global usuario_logado
+
+    if not usuario_logado:
+        return
+
     respostas = [var1.get(), var2.get(), var3.get(), var4.get(), var5.get()]
     pontuacao = sum(respostas)
     usuarios[usuario_logado]["pontuacao"] += pontuacao
+
+    salvar_dados_excel()  # Salva só depois do questionário
     mostrar_feedback(pontuacao)
+
+def salvar_dados_excel():
+    """Cria ou atualiza o arquivo Excel com os dados atuais dos usuários"""
+    dados = pd.DataFrame([
+        {
+            "Nome": info["nome"],
+            "E-mail": email,
+            "Senha": info["senha"],
+            "Pontuação": info["pontuacao"]
+        }
+        for email, info in usuarios.items()
+    ])
+    dados.to_excel(arquivo_excel, index=False)
 
 def mostrar_feedback(pontos):
     if pontos >= 40:
@@ -192,7 +198,6 @@ label_resultado.pack(pady=40)
 btn_voltar_menu = ctk.CTkButton(frame_resultado, text="Voltar ao Menu", command=lambda: mostrar_frame(frame_menu))
 btn_voltar_menu.pack()
 
-# Iniciar na tela de menu
+# Iniciar no menu
 mostrar_frame(frame_menu)
-
 app.mainloop()
