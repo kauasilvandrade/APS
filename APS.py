@@ -89,6 +89,7 @@ def calcular_pontuacao():
     salvar_usuarios()
     mostrar_feedback(pontos)
 
+# --- Função para mostrar o feedback e o ranking ---
 def mostrar_feedback(pontos):
     if pontos >= 40:
         msg = "Excelente! Você é um exemplo de sustentabilidade! 💚"
@@ -97,20 +98,43 @@ def mostrar_feedback(pontos):
     else:
         msg = "Vamos melhorar? Pequenas mudanças geram grandes impactos. 🌍"
 
-    label_resultado.configure(text=f"Sua pontuação: {pontos}\n\n{msg}")
+    # Atualiza ranking
+    ranking = sorted(
+        usuarios.items(),
+        key=lambda x: x[1]["pontuacao"],
+        reverse=True
+    )
+
+    texto_ranking = "🏆  Ranking de Usuários:\n\n"
+    for i, (email, info) in enumerate(ranking[:5], start=1):
+        destaque = " ← você" if email == usuario_logado else ""
+        texto_ranking += f"{i}º - {info['nome']} ({info['pontuacao']} pts){destaque}\n"
+
+    # Atualiza o texto do resultado
+    label_resultado.configure(
+        text=f"Sua pontuação nesta rodada: {pontos}\n\n{msg}\n"
+    )
+
+    # Atualiza barra de progresso
+    progresso = pontos / 50  # supondo 50 seja o máximo possível
+    barra_progresso.set(progresso)
+
+    # Atualiza o texto do ranking
+    label_ranking.configure(text=texto_ranking)
+
     mostrar_frame(frame_resultado)
 
 # --- Menu Principal ---
 frame_menu = ctk.CTkFrame(app)
 frame_menu.pack(pady=20)
 
-label_titulo_menu = ctk.CTkLabel(frame_menu, text="🌿 EcoScore 🌿", font=ctk.CTkFont(size=26, weight="bold"))
+label_titulo_menu = ctk.CTkLabel(frame_menu, text="🌿   Planeta +   🌿", font=ctk.CTkFont(size=26, weight="bold"))
 label_titulo_menu.pack(pady=(120,30))
 
-btn_login_menu = ctk.CTkButton(frame_menu, text="Login", width=280, height=40, command=lambda: mostrar_frame(frame_login))
+btn_login_menu = ctk.CTkButton(frame_menu, text="Login", width=280, height=40, fg_color="#1D8F47", hover_color="#16A34A", command=lambda: mostrar_frame(frame_login))
 btn_login_menu.pack(pady=10)
 
-btn_cadastro_menu = ctk.CTkButton(frame_menu, text="Cadastro", width=280, height=40, command=lambda: mostrar_frame(frame_cadastro))
+btn_cadastro_menu = ctk.CTkButton(frame_menu, text="Cadastro", width=280, height=40, fg_color="#1D8F47", hover_color="#16A34A", command=lambda: mostrar_frame(frame_cadastro))
 btn_cadastro_menu.pack(pady=10)
 
 btn_sair_menu = ctk.CTkButton(frame_menu, text="Sair", width=280, height=40, fg_color="#9CA3AF", hover_color="#6B7280", command=app.destroy)
@@ -128,7 +152,7 @@ entry_email.pack(pady=7)
 entry_senha = ctk.CTkEntry(frame_cadastro, placeholder_text="Senha", show="*", width=300, height=35)
 entry_senha.pack(pady=7)
 
-botao_cadastrar = ctk.CTkButton(frame_cadastro, text="Cadastrar", width=300, height=40, fg_color="#3B82F6", hover_color="#2563EB", command=cadastrar_usuario)
+botao_cadastrar = ctk.CTkButton(frame_cadastro, text="Cadastrar", width=300, height=40, fg_color="#22C55E", hover_color="#16A34A", command=cadastrar_usuario)
 botao_cadastrar.pack(pady=10)
 
 label_status = ctk.CTkLabel(frame_cadastro, text="", font=ctk.CTkFont(size=14))
@@ -167,22 +191,60 @@ var3 = ctk.IntVar()
 var4 = ctk.IntVar()
 var5 = ctk.IntVar()
 
-ctk.CTkCheckBox(frame_quiz, text="Usou transporte sustentável hoje?", variable=var1, onvalue=10, offvalue=0).pack(anchor="w", padx=50, pady=7)
-ctk.CTkCheckBox(frame_quiz, text="Evitou uso de descartáveis?", variable=var2, onvalue=10, offvalue=0).pack(anchor="w", padx=50, pady=7)
-ctk.CTkCheckBox(frame_quiz, text="Separou o lixo reciclável?", variable=var3, onvalue=10, offvalue=0).pack(anchor="w", padx=50, pady=7)
-ctk.CTkCheckBox(frame_quiz, text="Economizou energia elétrica?", variable=var4, onvalue=10, offvalue=0).pack(anchor="w", padx=50, pady=7)
-ctk.CTkCheckBox(frame_quiz, text="Reaproveitou materiais?", variable=var5, onvalue=10, offvalue=0).pack(anchor="w", padx=50, pady=7)
+ctk.CTkCheckBox(frame_quiz, text="Optou por produtos locais ou orgânicos hoje?", variable=var1, onvalue=10, offvalue=0, fg_color="#3CCF4E").pack(anchor="w", padx=50, pady=7)
+ctk.CTkCheckBox(frame_quiz, text="Desligou luzes e aparelhos que não estava usando?", variable=var2, onvalue=10, offvalue=0, fg_color="#3CCF4E").pack(anchor="w", padx=50, pady=7)
+ctk.CTkCheckBox(frame_quiz, text="Utilizou transporte coletivo, bicicleta ou caminhou em vez do carro?", variable=var3, onvalue=10, offvalue=0, fg_color="#3CCF4E").pack(anchor="w", padx=50, pady=7)
+ctk.CTkCheckBox(frame_quiz, text="Reduziu o consumo de água durante o banho ou nas tarefas domésticas?", variable=var4, onvalue=10, offvalue=0, fg_color="#3CCF4E").pack(anchor="w", padx=50, pady=7)
+ctk.CTkCheckBox(frame_quiz, text="Reciclou, reutilizou ou deu um novo uso a algum material?", variable=var5, onvalue=10, offvalue=0, fg_color="#3CCF4E").pack(anchor="w", padx=50, pady=7)
 
-botao_enviar = ctk.CTkButton(frame_quiz, text="Enviar respostas", width=250, height=40, command=calcular_pontuacao)
+botao_enviar = ctk.CTkButton(frame_quiz, text="Enviar respostas", width=250, height=40, fg_color="#1D8F47", hover_color="#16A34A", command=calcular_pontuacao)
 botao_enviar.pack(pady=20)
 
 # --- Resultado ---
 frame_resultado = ctk.CTkFrame(app)
-label_resultado = ctk.CTkLabel(frame_resultado, text="", font=("Arial", 18))
-label_resultado.pack(pady=40)
 
-btn_voltar_menu = ctk.CTkButton(frame_resultado, text="Voltar ao Menu", command=lambda: mostrar_frame(frame_menu))
-btn_voltar_menu.pack()
+label_titulo_resultado = ctk.CTkLabel(
+    frame_resultado,
+    text="Resultados",
+    font=ctk.CTkFont(size=26, weight="bold")
+)
+label_titulo_resultado.pack(pady=(80, 20))
+
+label_resultado = ctk.CTkLabel(
+    frame_resultado,
+    text="",
+    font=ctk.CTkFont(size=16),
+    justify="center"
+)
+label_resultado.pack(pady=(10, 5), padx=50)
+
+# --- Barra de progresso ---
+barra_progresso = ctk.CTkProgressBar(
+    frame_resultado,
+    width=300,
+    height=20,
+    progress_color="#3CCF4E"  # verde agradável
+)
+barra_progresso.pack(pady=(10, 20))
+barra_progresso.set(0)
+
+# --- Texto do ranking ---
+label_ranking = ctk.CTkLabel(
+    frame_resultado,
+    text="",
+    font=ctk.CTkFont(size=15),
+    justify="left"
+)
+label_ranking.pack(pady=(10, 20), padx=40)
+
+btn_voltar_menu = ctk.CTkButton(
+    frame_resultado,
+    text="Voltar ao Menu",
+    width=250,
+    height=40,
+    command=lambda: mostrar_frame(frame_menu)
+)
+btn_voltar_menu.pack(pady=(10, 30))
 
 # Iniciar no menu
 mostrar_frame(frame_menu)
